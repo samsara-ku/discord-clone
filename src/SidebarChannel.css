@@ -3,7 +3,7 @@
   padding-left: 15px;
   align-items: center;
   color: gray;
-  cursor: ;
+  cursor: pointer;
 }
 
 .sidebarChannel:hover > h4 {
