@@ -10,8 +10,14 @@ import { Avatar } from '@material-ui/core'
 import Mic from '@material-ui/icons/Mic'
 import Headset from '@material-ui/icons/Headset'
 import Settings from '@material-ui/icons/Settings'
+import { useSelector } from 'react-redux'
+import { selectUser } from './features/userSlice'
 
 function Sidebar() {
+  const user = useSelector(selectUser)
+
+  console.log('user: ', user)
+
   return (
     <div className="sidebar">
       <div className="sidebar__top">
@@ -31,7 +37,7 @@ function Sidebar() {
         </div>
       </div>
       <div className="sidebar__voice">
-        <SignalCellularAlt className="sidebar__voiceIcon" fontsize="large" />
+        <SignalCellularAlt className="sidebar__voiceIcon" fontSize="large" />
         <div className="sidebar__voiceInfo">
           <h3>Voice Connected</h3>
           <p>Stream</p>
@@ -42,10 +48,10 @@ function Sidebar() {
         </div>
       </div>
       <div className="sidebar__profile">
-        <Avatar />
+        <Avatar src={user.photo} />
         <div className="sidebar__profileInfo">
-          <h3>@samsara_ku</h3>
-          <p>#thisIsMyID</p>
+          <h3>{user.displayName}</h3>
+          <p>{user.uid.substring(0, 5)}</p>
         </div>
         <div className="sidebar__profileIcons">
           <Mic />

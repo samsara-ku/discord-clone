@@ -1,4 +1,5 @@
 .prettierrc
+.eslintcache
 
 # dependencies
 /node_modules
