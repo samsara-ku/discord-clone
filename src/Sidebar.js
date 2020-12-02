@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './Sidebar.css'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Add from '@material-ui/icons/Add'
@@ -12,11 +12,32 @@ import Headset from '@material-ui/icons/Headset'
 import Settings from '@material-ui/icons/Settings'
 import { useSelector } from 'react-redux'
 import { selectUser } from './features/userSlice'
+import db, { auth } from './firebase'
 
 function Sidebar() {
   const user = useSelector(selectUser)
+  const [channels, setChannels] = useState([])
 
-  console.log('user: ', user)
+  const handleAddChannel = () => {
+    const channelName = prompt('Hi')
+
+    if (channelName) {
+      db.collection('channels').add({
+        channelName: channelName,
+      })
+    }
+  }
+
+  useEffect(() => {
+    db.collection('channels').onSnapshot((snapshot) => {
+      setChannels(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          channel: doc.data(),
+        }))
+      )
+    })
+  }, [])
 
   return (
     <div className="sidebar">
@@ -30,10 +51,12 @@ function Sidebar() {
             <ExpandMore />
             <h4>Text Channels</h4>
           </div>
-          <Add className="sidebar__addChannel" />
+          <Add onClick={handleAddChannel} className="sidebar__addChannel" />
         </div>
         <div className="sidebar__channelsList">
-          <SidebarChannel />
+          {channels.map(({ id, channel }) => (
+            <SidebarChannel key={id} id={id} channelName={channel.channelName} />
+          ))}
         </div>
       </div>
       <div className="sidebar__voice">
@@ -48,7 +71,7 @@ function Sidebar() {
         </div>
       </div>
       <div className="sidebar__profile">
-        <Avatar src={user.photo} />
+        <Avatar onClick={() => auth.signOut()} src={user.photo} />
         <div className="sidebar__profileInfo">
           <h3>{user.displayName}</h3>
           <p>{user.uid.substring(0, 5)}</p>
