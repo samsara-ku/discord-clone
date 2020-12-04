@@ -38,5 +38,25 @@ app.post('/new/channel', (req, res) => {
   })
 })
 
+app.get('/get/channelList', (req, res) => {
+  mongoData.find((err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    } else {
+      let channels = []
+
+      data.map((channelData) => {
+        const channelInfo = {
+          id: channelData._id,
+          name: channelData.channelName,
+        }
+        channels.push(channelInfo)
+      })
+
+      res.status(200).send(channels)
+    }
+  })
+})
+
 // listen
 app.listen(port, () => console.log(`Listening on localhost:${port}`))
