@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import mongoData from './mongoData.js'
 
 // app config
 const app = express()
@@ -22,6 +23,20 @@ mongoose.connect(mongoURI, {
 
 // api routes
 app.get('/', (req, res) => res.status(200).send('hello world'))
+
+app.post('/new/channel', (req, res) => {
+  const dbData = req.body
+
+  console.log(dbData)
+
+  mongoData.create(dbData, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    } else {
+      res.status(201).send(data)
+    }
+  })
+})
 
 // listen
 app.listen(port, () => console.log(`Listening on localhost:${port}`))
