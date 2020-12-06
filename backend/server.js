@@ -58,5 +58,20 @@ app.get('/get/channelList', (req, res) => {
   })
 })
 
+app.post('/new/message', (req, res) => {
+  const newMessage = req.body
+
+  mongoData.update({ _id: req.query.id }, { $push: { conversation: req.body } }, (err, data) => {
+    if (err) {
+      console.log('Error saving message...')
+      console.log(err)
+
+      res.status(500).send(err)
+    } else {
+      res.status(201).send(data)
+    }
+  })
+})
+
 // listen
 app.listen(port, () => console.log(`Listening on localhost:${port}`))
